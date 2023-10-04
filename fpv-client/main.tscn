@@ -1,0 +1,264 @@
+[gd_scene load_steps=7 format=3 uid="uid://rsyx3hrfinsf"]
+
+[ext_resource type="Script" path="res://Menu.gd" id="1_ee0w2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py2e2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nxx4c"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.388235, 0.388235, 0.388235, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="Theme" id="Theme_7wxxr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qtpmh"]
+bg_color = Color(0.427451, 0.607843, 0.866667, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pijnp"]
+bg_color = Color(0.419608, 0.419608, 0.419608, 1)
+
+[node name="Control" type="Control"]
+layout_direction = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -196.0
+offset_right = 192.0
+offset_bottom = 188.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_py2e2")
+script = ExtResource("1_ee0w2")
+
+[node name="Label" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -31.0
+offset_right = 31.0
+offset_bottom = 26.0
+grow_horizontal = 2
+text = "Settings"
+
+[node name="Label2" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 40.0
+offset_right = -50.0
+offset_bottom = 66.0
+grow_horizontal = 2
+text = "Raspi IP address"
+
+[node name="Label3" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 104.0
+offset_right = 25.0
+offset_bottom = 130.0
+grow_horizontal = 2
+text = "Steering wheel HID device"
+
+[node name="SteeringWheelDeviceLabel" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 128.0
+offset_right = 25.0
+offset_bottom = 154.0
+grow_horizontal = 2
+text = "None"
+
+[node name="Button" type="Button" parent="Menu"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -24.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "x"
+
+[node name="AddressField" type="TextEdit" parent="Menu"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 64.0
+offset_right = 256.0
+offset_bottom = 96.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "192.168.0.20:5000"
+scroll_fit_content_height = true
+
+[node name="Button2" type="Button" parent="Menu"]
+layout_mode = 0
+offset_left = 296.0
+offset_top = 64.0
+offset_right = 368.0
+offset_bottom = 95.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Connect"
+
+[node name="Label5" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 160.0
+offset_right = 25.0
+offset_bottom = 186.0
+grow_horizontal = 2
+text = "Pedals HID device"
+
+[node name="PedalsDeviceLabel" type="Label" parent="Menu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_top = 184.0
+offset_right = 25.0
+offset_bottom = 210.0
+grow_horizontal = 2
+text = "None"
+
+[node name="FlowContainer" type="FlowContainer" parent="Menu"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 224.0
+offset_right = 368.0
+offset_bottom = 368.0
+
+[node name="Button" type="Button" parent="Menu/FlowContainer"]
+layout_mode = 2
+theme = SubResource("Theme_7wxxr")
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set steering axis"
+
+[node name="Button2" type="Button" parent="Menu/FlowContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set throttle axis"
+
+[node name="Button3" type="Button" parent="Menu/FlowContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set break axis"
+
+[node name="Button4" type="Button" parent="Menu/FlowContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set reverse button"
+
+[node name="Button5" type="Button" parent="Menu/FlowContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set honk button"
+
+[node name="ConnectionStatus" type="ColorRect" parent="Menu"]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 72.0
+offset_right = 280.0
+offset_bottom = 88.0
+color = Color(1, 0.286275, 0.411765, 1)
+
+[node name="ButtonPopup" type="Panel" parent="Menu"]
+visible = false
+layout_mode = 0
+offset_left = 56.0
+offset_top = 128.0
+offset_right = 328.0
+offset_bottom = 256.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qtpmh")
+
+[node name="Label" type="Label" parent="Menu/ButtonPopup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -126.0
+offset_top = -13.0
+offset_right = 126.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "< Press button or ESC to cancel >"
+
+[node name="AxisPopup" type="Panel" parent="Menu"]
+visible = false
+layout_mode = 0
+offset_left = 48.0
+offset_top = 128.0
+offset_right = 336.0
+offset_bottom = 256.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qtpmh")
+
+[node name="Label" type="Label" parent="Menu/AxisPopup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -126.0
+offset_top = -13.0
+offset_right = 126.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "< Move axis or press ESC to cancel >"
+
+[node name="MenuButton" type="MenuButton" parent="Menu"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 104.0
+offset_right = 345.0
+offset_bottom = 135.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
+text = "Set"
+
+[node name="MenuButton2" type="MenuButton" parent="Menu"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 168.0
+offset_right = 345.0
+offset_bottom = 199.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
+text = "Set"
+
+[connection signal="pressed" from="Menu/Button2" to="Menu" method="on_connect_pressed"]
+[connection signal="pressed" from="Menu/MenuButton" to="Menu" method="on_wheel_hid_pressed"]
+[connection signal="pressed" from="Menu/MenuButton2" to="Menu" method="on_pedals_hid_pressed"]
