@@ -1,6 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://rsyx3hrfinsf"]
+[gd_scene load_steps=14 format=3 uid="uid://rsyx3hrfinsf"]
 
 [ext_resource type="Script" path="res://Menu.gd" id="1_ee0w2"]
+[ext_resource type="Script" path="res://main.gd" id="1_vpkn6"]
+[ext_resource type="Script" path="res://ButtonPopup.gd" id="2_d7t1v"]
+[ext_resource type="Script" path="res://ThrottleIcon.gd" id="2_fd80p"]
+[ext_resource type="Script" path="res://AxisPopup.gd" id="2_ha6yv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py2e2"]
 
@@ -17,6 +21,9 @@ corner_radius_bottom_left = 5
 
 [sub_resource type="Theme" id="Theme_7wxxr"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pijnp"]
+bg_color = Color(0.419608, 0.419608, 0.419608, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qtpmh"]
 bg_color = Color(0.427451, 0.607843, 0.866667, 1)
 corner_radius_top_left = 5
@@ -24,10 +31,17 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pijnp"]
-bg_color = Color(0.419608, 0.419608, 0.419608, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cywog"]
+bg_color = Color(0, 0.713726, 0.411765, 1)
 
-[node name="Control" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_txmxe"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xk54b"]
+font_size = 26
+font_color = Color(1, 0.423529, 0.117647, 1)
+
+[node name="Main" type="Control"]
 layout_direction = 2
 layout_mode = 3
 anchors_preset = 15
@@ -35,6 +49,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_vpkn6")
 
 [node name="Menu" type="Panel" parent="."]
 layout_mode = 1
@@ -163,7 +178,7 @@ offset_bottom = 368.0
 layout_mode = 2
 theme = SubResource("Theme_7wxxr")
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
-text = "Set steering axis"
+text = "Set wheel axis"
 
 [node name="Button2" type="Button" parent="Menu/FlowContainer"]
 layout_mode = 2
@@ -171,16 +186,19 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
 text = "Set throttle axis"
 
 [node name="Button3" type="Button" parent="Menu/FlowContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
-text = "Set break axis"
+text = "Set brake axis"
 
 [node name="Button4" type="Button" parent="Menu/FlowContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
 text = "Set reverse button"
 
 [node name="Button5" type="Button" parent="Menu/FlowContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
 text = "Set honk button"
@@ -193,6 +211,24 @@ offset_right = 280.0
 offset_bottom = 88.0
 color = Color(1, 0.286275, 0.411765, 1)
 
+[node name="MenuButton" type="MenuButton" parent="Menu"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 104.0
+offset_right = 345.0
+offset_bottom = 135.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
+text = "Set"
+
+[node name="MenuButton2" type="MenuButton" parent="Menu"]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 168.0
+offset_right = 345.0
+offset_bottom = 199.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
+text = "Set"
+
 [node name="ButtonPopup" type="Panel" parent="Menu"]
 visible = false
 layout_mode = 0
@@ -201,6 +237,7 @@ offset_top = 128.0
 offset_right = 328.0
 offset_bottom = 256.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_qtpmh")
+script = ExtResource("2_d7t1v")
 
 [node name="Label" type="Label" parent="Menu/ButtonPopup"]
 layout_mode = 1
@@ -225,6 +262,7 @@ offset_top = 128.0
 offset_right = 336.0
 offset_bottom = 256.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_qtpmh")
+script = ExtResource("2_ha6yv")
 
 [node name="Label" type="Label" parent="Menu/AxisPopup"]
 layout_mode = 1
@@ -241,24 +279,66 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "< Move axis or press ESC to cancel >"
 
-[node name="MenuButton" type="MenuButton" parent="Menu"]
-layout_mode = 0
-offset_left = 312.0
-offset_top = 104.0
-offset_right = 345.0
-offset_bottom = 135.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
-text = "Set"
+[node name="HUD" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -40.0
+offset_right = 256.0
+grow_horizontal = 2
+grow_vertical = 0
 
-[node name="MenuButton2" type="MenuButton" parent="Menu"]
+[node name="SettingsButton" type="Button" parent="HUD"]
 layout_mode = 0
-offset_left = 312.0
-offset_top = 168.0
-offset_right = 345.0
-offset_bottom = 199.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_pijnp")
-text = "Set"
+offset_left = -120.0
+offset_top = 8.0
+offset_right = -4.0
+offset_bottom = 39.0
+text = "Settings"
 
+[node name="ThrottleSlider" type="HSlider" parent="HUD"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 248.0
+offset_bottom = 32.0
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_cywog")
+editable = false
+scrollable = false
+
+[node name="SteeringSlider" type="HSlider" parent="HUD"]
+layout_mode = 0
+offset_left = 264.0
+offset_top = 8.0
+offset_right = 504.0
+offset_bottom = 32.0
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_txmxe")
+min_value = -50.0
+max_value = 50.0
+editable = false
+scrollable = false
+
+[node name="ReverseIcon" type="Label" parent="HUD"]
+visible = false
+layout_mode = 0
+offset_left = 520.0
+offset_right = 560.0
+offset_bottom = 40.0
+text = "R"
+label_settings = SubResource("LabelSettings_xk54b")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_fd80p")
+
+[connection signal="pressed" from="Menu/Button" to="Menu" method="on_close_pressed"]
 [connection signal="pressed" from="Menu/Button2" to="Menu" method="on_connect_pressed"]
+[connection signal="pressed" from="Menu/FlowContainer/Button" to="Menu" method="on_set_axis_pressed" binds= ["wheel"]]
+[connection signal="pressed" from="Menu/FlowContainer/Button2" to="Menu" method="on_set_axis_pressed" binds= ["throttle"]]
+[connection signal="pressed" from="Menu/FlowContainer/Button4" to="Menu" method="on_set_button_pressed" binds= ["reverse"]]
 [connection signal="pressed" from="Menu/MenuButton" to="Menu" method="on_wheel_hid_pressed"]
 [connection signal="pressed" from="Menu/MenuButton2" to="Menu" method="on_pedals_hid_pressed"]
+[connection signal="pressed" from="HUD/SettingsButton" to="Menu" method="on_settings_pressed"]

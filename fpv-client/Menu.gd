@@ -1,5 +1,7 @@
 extends Panel
 
+@onready var main = $".."
+
 @onready var address_field = get_node("AddressField") as TextEdit
 @onready var connection_status = get_node("ConnectionStatus") as ColorRect
 
@@ -8,12 +10,9 @@ extends Panel
 @onready var wheel_label = get_node("SteeringWheelDeviceLabel")
 @onready var pedals_label = get_node("PedalsDeviceLabel")
 
-var wheel_hid_id = -1
-var pedals_hid_id = -1
+@onready var axis_popup = get_node("AxisPopup") as Panel
+@onready var button_popup = get_node("ButtonPopup") as Panel
 
-var udp_ip = ""
-var udp_port = 0
-var udp_client := PacketPeerUDP.new()
 var NOT_CONNECTED_COLOR = "#ff4969"
 var CONNECTING_COLOR = "#d0d800"
 var CONNECTED_COLOR = "#4eb100"
@@ -25,21 +24,25 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if udp_client.is_socket_connected():
-		connection_status.color = CONNECTED_COLOR
-		print("socket connected")
-	elif udp_ip != "" && udp_port != 0:
-		connection_status.color = CONNECTING_COLOR
-		udp_client.connect_to_host(udp_ip, udp_port)
+	pass
+	
+func on_close_pressed():
+	self.visible = false
+	
+func on_settings_pressed():
+	self.visible = true
 	
 func on_connect_pressed():
 	connection_status.color = CONNECTING_COLOR
 	if address_field.text.split(":").size() == 2:
 		var ip = address_field.text.split(":")[0]
 		var port = int(address_field.text.split(":")[1])
-		udp_client.connect_to_host(ip, port)
-		udp_ip = ip
-		udp_port = port
+		var result = main.try_connect(ip, port)
+		if result:
+			connection_status.color = CONNECTED_COLOR
+		else:
+			connection_status.color = NOT_CONNECTED_COLOR
+			
 
 func on_wheel_hid_pressed():
 	var device_ids = Input.get_connected_joypads()
@@ -53,7 +56,7 @@ func on_wheel_hid_pressed():
 		wheel_hid_menu_button.get_popup().add_item(device_names[i], i)
 		
 func on_wheel_hid_selected(id):
-	wheel_hid_id = id
+	main.set_wheel_hid(id)
 	wheel_label.text = Input.get_joy_name(id)
 
 func on_pedals_hid_pressed():
@@ -68,5 +71,29 @@ func on_pedals_hid_pressed():
 		pedals_hid_menu_button.get_popup().add_item(device_names[i], i)
 		
 func on_pedals_hid_selected(id):
-	pedals_hid_id = id
+	main.set_pedals_hid(id)
 	pedals_label.text = Input.get_joy_name(id)
+
+func on_set_axis_pressed(control_name):
+	axis_popup.callback = set_axis
+	axis_popup.control_name = control_name
+	axis_popup.visible = true
+
+func set_axis(control_name: String, axis: int):
+	match control_name:
+		"wheel":
+			main.set_wheel_axis(axis)
+		"throttle":
+			main.set_throttle_axis(axis)
+	print("set ", control_name, " to axis", axis)
+
+#func on_set_button_pressed(control_name):
+#	button_popup.callback = set_button
+#	button_popup.control_name = control_name
+#	button_popup.visible = true
+#
+#func set_button(control_name: String, button: int):
+#	match control_name:
+#		"reverse":
+#			reverse_button_number = button
+#	print("set ", control_name, " to button", button)
