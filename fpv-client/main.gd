@@ -17,6 +17,7 @@ var CONNECTING_COLOR = "#d0d800"
 var CONNECTED_COLOR = "#4eb100"
 
 var current_steering_value = 0.0
+var current_throttle_value = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,12 +45,19 @@ func _unhandled_input(event):
 			event = event as InputEventJoypadMotion
 			if event.device == pedals_hid && event.axis == throttle_axis:
 				throttle_slider.value = event.axis_value*100
+				current_throttle_value = event.axis_value*100
 				
 func send_data():
 	var steering_data = PackedByteArray()
 	steering_data.resize(4)
 	steering_data.encode_float(0, current_steering_value)
-	print(steering_data.decode_float(0)," ", udp_client.put_packet(steering_data))
+	
+	var throttle_data = PackedByteArray()
+	throttle_data.resize(4)
+	throttle_data.encode_float(0, current_throttle_value)
+	print(current_throttle_value, throttle_data)
+	
+	udp_client.put_packet(steering_data+throttle_data)
 
 func try_connect(ip: String, port: int):
 	var result = udp_client.connect_to_host(ip, port)
