@@ -19,6 +19,7 @@ args = parser.parse_args()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(("0.0.0.0", int(args.port)))
+sock.settimeout(0.5)
 
 servoPIN = 14
 GPIO.setmode(GPIO.BCM)
@@ -35,50 +36,55 @@ motor = servo.Servo(pca.channels[0])
 motor.angle = 110
 
 def set_throttle (throttle):
-    if throttle >= 110 and throttle <= 120:
+    # failsafe for bad math
+    if throttle <= 110 and throttle >= 100:
         motor.angle = throttle
     else:
         raise Exception("Bad throttle value")
 
+def reset_servo_and_motor():
+    servomotor.angle = 90
+    motor.angle = 110
+
+def cleanup_IO():
+    p.stop()
+    pca.deinit()
+    GPIO.cleanup()
+
 try:
     print("Waiting for connection")
     while True:
-        data, addr = sock.recvfrom(8) # bytes
-        print("received message: %s" % data, len(data))
+        try:
+            data, addr = sock.recvfrom(8) # bytes
+            print("received message: %s" % data, len(data))
 
-        first_part = data[:4]
-        second_part = data[4:]
-        print(first_part, second_part)
+            first_part = data[:4]
+            second_part = data[4:]
+            print(first_part, second_part)
 
-        steering = struct.unpack('<f', first_part)[0]
-        print("steering ", steering)
-        if steering >= -50 and steering <= 50:
-            # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
-            servo_angle = (((steering + 50) * 140) / 100) + 20
-            print(servo_angle)
-            servomotor.angle = servo_angle
-            # servo_steering = (((steering - -50) * 2.5) / 100) + 5
-            # print(servo_steering)
-            # p.ChangeDutyCycle(servo_steering)
+            steering = struct.unpack('<f', first_part)[0]
+            print("steering ", steering)
+            if steering >= -50 and steering <= 50:
+                # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+                servo_angle = (((steering + 50) * 140) / 100) + 20
+                print(servo_angle)
+                servomotor.angle = servo_angle
 
-        throttle = struct.unpack('<f', second_part)[0]
-        print("throttle ", throttle)
-        if throttle >= 0 and throttle <= 100:
-            # forward --- 110 +++ backwards?
-            # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
-            motor_throttle = (((throttle) * 10) / 100) + 110
-            print(motor_throttle)
-            set_throttle(motor_throttle)
+            throttle = struct.unpack('<f', second_part)[0]
+            print("throttle ", throttle)
+            if throttle >= 0 and throttle <= 100:
+                # forward --- 110 +++ backwards
+                # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+                motor_throttle = (((throttle*-1) * 10) / 100) + 110
+                print(motor_throttle)
+                set_throttle(motor_throttle)
+        # check every 0.5s if we are receiving data, stop if not
+        except socket.timeout:
+            reset_servo_and_motor()
 except KeyboardInterrupt:
-    servomotor.angle = 90
-    motor.angle = 110
-    p.stop()
-    pca.deinit()
-    GPIO.cleanup()
+    reset_servo_and_motor()
+    cleanup_IO()
 except Exception as error:
     print("error: ", error)
-    servomotor.angle = 90
-    motor.angle = 110
-    p.stop()
-    pca.deinit()
-    GPIO.cleanup()
+    reset_servo_and_motor()
+    cleanup_IO()
