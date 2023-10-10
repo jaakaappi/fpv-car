@@ -30,6 +30,7 @@ p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
 p.start(6.25)
 time.sleep(1)
 
+servo_trim = 20
 servomotor = servo.Servo(pca.channels[7])
 servomotor.angle = 90
 motor = servo.Servo(pca.channels[0])
@@ -66,7 +67,7 @@ try:
             print("steering ", steering)
             if steering >= -50 and steering <= 50:
                 # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
-                servo_angle = (((steering + 50) * 140) / 100) + 20
+                servo_angle = (((steering + 50) * (180-servo_trim)) / 100)+servo_trim
                 print(servo_angle)
                 servomotor.angle = servo_angle
 
