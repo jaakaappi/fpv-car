@@ -4,7 +4,6 @@ import struct
 import time
 
 import busio
-import RPi.GPIO as GPIO
 from adafruit_motor import servo
 from adafruit_pca9685 import PCA9685
 from board import SCL, SDA
@@ -20,15 +19,6 @@ args = parser.parse_args()
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.bind(("0.0.0.0", int(args.port)))
 sock.settimeout(0.5)
-
-servoPIN = 14
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(servoPIN, GPIO.OUT)
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-
-# servo range 5-7.5
-p.start(6.25)
-time.sleep(1)
 
 servo_trim = 20
 servomotor = servo.Servo(pca.channels[7])
@@ -48,7 +38,6 @@ def reset_servo_and_motor():
     motor.angle = 110
 
 def cleanup_IO():
-    p.stop()
     pca.deinit()
     GPIO.cleanup()
 
