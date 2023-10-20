@@ -7,6 +7,7 @@ var wheel_hid = -1
 var pedals_hid = -1
 var wheel_axis = -1
 var throttle_axis = -1
+var reverse_button = -1
 #var reverse_button_number = ""
 
 var udp_ip = ""
@@ -18,6 +19,9 @@ var CONNECTED_COLOR = "#4eb100"
 
 var current_steering_value = 0.0
 var current_throttle_value = 0.0
+var current_reverse_value = false
+
+var reverse_timeout_timestamp = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -40,6 +44,18 @@ func _unhandled_input(event):
 			if event.device == wheel_hid && event.axis == wheel_axis:
 				steering_slider.value = event.axis_value*50
 				current_steering_value = event.axis_value*50
+				
+	# todo move inside wheel hid
+	if event is InputEventJoypadButton:
+		if event.device == wheel_hid && event.button_index == reverse_button:
+			current_reverse_value = true
+	if event is InputEventKey:
+		if event.keycode == reverse_button:
+			print(event)
+			current_reverse_value = event.pressed
+			if(event.pressed):
+				reverse_timeout_timestamp = Time.get_ticks_msec()
+	
 	if pedals_hid != -1 && throttle_axis != -1:
 		if event is InputEventJoypadMotion:
 			event = event as InputEventJoypadMotion
@@ -54,10 +70,15 @@ func send_data():
 	
 	var throttle_data = PackedByteArray()
 	throttle_data.resize(4)
-	throttle_data.encode_float(0, current_throttle_value)
-	print(current_throttle_value, throttle_data)
+	throttle_data.encode_float(0, current_throttle_value if !current_reverse_value else 0)
 	
-	udp_client.put_packet(steering_data+throttle_data)
+	var reverse_data = PackedByteArray()
+	reverse_data.resize(4)
+	reverse_data.encode_float(0, 1.0 if current_reverse_value else 0)
+	
+	print(throttle_data, reverse_data)
+	
+	udp_client.put_packet(steering_data+throttle_data+reverse_data)
 
 func try_connect(ip: String, port: int):
 	var result = udp_client.connect_to_host(ip, port)
@@ -85,3 +106,7 @@ func set_pedals_hid(hid):
 func set_throttle_axis(axis):
 	print("pedals axis", axis)
 	self.throttle_axis = axis
+	
+func set_reverse_button(button):
+	print("reverse button", button)
+	self.reverse_button = button

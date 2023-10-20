@@ -1,4 +1,5 @@
 import argparse
+import math
 import socket
 import struct
 import time
@@ -25,10 +26,12 @@ servomotor = servo.Servo(pca.channels[7])
 servomotor.angle = 90
 motor = servo.Servo(pca.channels[0])
 motor.angle = 110
+# needed for the ESC to wake up
+time.sleep(0.5)
 
 def set_throttle (throttle):
     # failsafe for bad math
-    if throttle <= 110 and throttle >= 100:
+    if throttle <= 135 and throttle >= 100:
         motor.angle = throttle
     else:
         raise Exception("Bad throttle value")
@@ -39,18 +42,18 @@ def reset_servo_and_motor():
 
 def cleanup_IO():
     pca.deinit()
-    GPIO.cleanup()
 
 try:
     print("Waiting for connection")
     while True:
         try:
-            data, addr = sock.recvfrom(8) # bytes
+            data, addr = sock.recvfrom(16) # bytes
             print("received message: %s" % data, len(data))
 
             first_part = data[:4]
-            second_part = data[4:]
-            print(first_part, second_part)
+            second_part = data[4:8]
+            thrid_part = data[8:]
+            print(first_part, second_part, thrid_part)
 
             steering = struct.unpack('<f', first_part)[0]
             print("steering ", steering)
@@ -60,14 +63,24 @@ try:
                 print(servo_angle)
                 servomotor.angle = servo_angle
 
+            reverse = struct.unpack('<f', thrid_part)[0]
+            print("reverse ", reverse)
+            if math.isclose(reverse, 1):
+                # forward --- 110 +++ backwards
+                # reversing starts from 130ish
+                reverse_throttle = 135 # static low speed reverse for now
+                print(reverse_throttle)
+                set_throttle(reverse_throttle)
+
             throttle = struct.unpack('<f', second_part)[0]
             print("throttle ", throttle)
-            if throttle >= 0 and throttle <= 100:
+            if throttle >= 0 and throttle <= 100 and reverse < 1: # not reversing
                 # forward --- 110 +++ backwards
                 # (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
                 motor_throttle = (((throttle*-1) * 10) / 100) + 110
                 print(motor_throttle)
                 set_throttle(motor_throttle)
+
         # check every 0.5s if we are receiving data, stop if not
         except socket.timeout:
             reset_servo_and_motor()

@@ -8,3 +8,6 @@ func _unhandled_input(event):
 		if event is InputEventJoypadButton:
 			callback.call(control_name, event.button_index)
 			self.visible = false
+		if event is InputEventKey:
+			callback.call(control_name, event.keycode)
+			self.visible = false

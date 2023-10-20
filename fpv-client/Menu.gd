@@ -87,13 +87,13 @@ func set_axis(control_name: String, axis: int):
 			main.set_throttle_axis(axis)
 	print("set ", control_name, " to axis", axis)
 
-#func on_set_button_pressed(control_name):
-#	button_popup.callback = set_button
-#	button_popup.control_name = control_name
-#	button_popup.visible = true
-#
-#func set_button(control_name: String, button: int):
-#	match control_name:
-#		"reverse":
-#			reverse_button_number = button
-#	print("set ", control_name, " to button", button)
+func on_set_button_pressed(control_name):
+	button_popup.callback = set_button
+	button_popup.control_name = control_name
+	button_popup.visible = true
+
+func set_button(control_name: String, button):
+	match control_name:
+		"reverse":
+			main.set_reverse_button(button)
+	print("set ", control_name, " to button", button)

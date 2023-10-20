@@ -186,10 +186,9 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
 text = "Set throttle axis"
 
 [node name="Button3" type="Button" parent="Menu/FlowContainer"]
-visible = false
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
-text = "Set brake axis"
+text = "Set reverse button"
 
 [node name="Button4" type="Button" parent="Menu/FlowContainer"]
 visible = false
@@ -338,6 +337,7 @@ script = ExtResource("2_fd80p")
 [connection signal="pressed" from="Menu/Button2" to="Menu" method="on_connect_pressed"]
 [connection signal="pressed" from="Menu/FlowContainer/Button" to="Menu" method="on_set_axis_pressed" binds= ["wheel"]]
 [connection signal="pressed" from="Menu/FlowContainer/Button2" to="Menu" method="on_set_axis_pressed" binds= ["throttle"]]
+[connection signal="pressed" from="Menu/FlowContainer/Button3" to="Menu" method="on_set_button_pressed" binds= [&"reverse"]]
 [connection signal="pressed" from="Menu/FlowContainer/Button4" to="Menu" method="on_set_button_pressed" binds= ["reverse"]]
 [connection signal="pressed" from="Menu/MenuButton" to="Menu" method="on_wheel_hid_pressed"]
 [connection signal="pressed" from="Menu/MenuButton2" to="Menu" method="on_pedals_hid_pressed"]
