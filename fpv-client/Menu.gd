@@ -96,4 +96,10 @@ func set_button(control_name: String, button):
 	match control_name:
 		"reverse":
 			main.set_reverse_button(button)
+		"left":
+			main.set_left_button(button)
+		"right":
+			main.set_right_button(button)
+		"throttle_button":
+			main.set_throttle_button(button)
 	print("set ", control_name, " to button", button)

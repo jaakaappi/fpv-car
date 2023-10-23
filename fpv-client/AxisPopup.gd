@@ -8,3 +8,5 @@ func _unhandled_input(event):
 		if event is InputEventJoypadMotion and abs(event.axis_value) >= 0.3:
 			callback.call(control_name, event.axis)
 			self.visible = false
+		if event is InputEventKey and event.keycode == KEY_ESCAPE:
+			self.visible = false

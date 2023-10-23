@@ -61,7 +61,7 @@ anchor_bottom = 0.5
 offset_left = -192.0
 offset_top = -196.0
 offset_right = 192.0
-offset_bottom = 188.0
+offset_bottom = 252.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_py2e2")
@@ -172,7 +172,7 @@ layout_mode = 0
 offset_left = 16.0
 offset_top = 224.0
 offset_right = 368.0
-offset_bottom = 368.0
+offset_bottom = 312.0
 
 [node name="Button" type="Button" parent="Menu/FlowContainer"]
 layout_mode = 2
@@ -190,17 +190,27 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
 text = "Set reverse button"
 
-[node name="Button4" type="Button" parent="Menu/FlowContainer"]
-visible = false
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
-text = "Set reverse button"
+[node name="FlowContainer2" type="FlowContainer" parent="Menu"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 328.0
+offset_right = 368.0
+offset_bottom = 400.0
 
-[node name="Button5" type="Button" parent="Menu/FlowContainer"]
-visible = false
+[node name="Button4" type="Button" parent="Menu/FlowContainer2"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
-text = "Set honk button"
+text = "Set left button"
+
+[node name="Button5" type="Button" parent="Menu/FlowContainer2"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set right button"
+
+[node name="Button6" type="Button" parent="Menu/FlowContainer2"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxx4c")
+text = "Set throttle button"
 
 [node name="ConnectionStatus" type="ColorRect" parent="Menu"]
 layout_mode = 0
@@ -338,7 +348,9 @@ script = ExtResource("2_fd80p")
 [connection signal="pressed" from="Menu/FlowContainer/Button" to="Menu" method="on_set_axis_pressed" binds= ["wheel"]]
 [connection signal="pressed" from="Menu/FlowContainer/Button2" to="Menu" method="on_set_axis_pressed" binds= ["throttle"]]
 [connection signal="pressed" from="Menu/FlowContainer/Button3" to="Menu" method="on_set_button_pressed" binds= [&"reverse"]]
-[connection signal="pressed" from="Menu/FlowContainer/Button4" to="Menu" method="on_set_button_pressed" binds= ["reverse"]]
+[connection signal="pressed" from="Menu/FlowContainer2/Button4" to="Menu" method="on_set_button_pressed" binds= ["left"]]
+[connection signal="pressed" from="Menu/FlowContainer2/Button5" to="Menu" method="on_set_button_pressed" binds= ["right"]]
+[connection signal="pressed" from="Menu/FlowContainer2/Button6" to="Menu" method="on_set_button_pressed" binds= ["throttle_button"]]
 [connection signal="pressed" from="Menu/MenuButton" to="Menu" method="on_wheel_hid_pressed"]
 [connection signal="pressed" from="Menu/MenuButton2" to="Menu" method="on_pedals_hid_pressed"]
 [connection signal="pressed" from="HUD/SettingsButton" to="Menu" method="on_settings_pressed"]

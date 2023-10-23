@@ -6,7 +6,10 @@ extends Control
 var wheel_hid = -1
 var pedals_hid = -1
 var wheel_axis = -1
+var wheel_left_button = -1
+var wheel_right_button = -1
 var throttle_axis = -1
+var throttle_button = -1
 var reverse_button = -1
 #var reverse_button_number = ""
 
@@ -40,24 +43,28 @@ func _process(delta):
 func _unhandled_input(event):
 	if wheel_hid != -1 && wheel_axis != -1:
 		if event is InputEventJoypadMotion:
+			print("wheel motion")
 			event = event as InputEventJoypadMotion
 			if event.device == wheel_hid && event.axis == wheel_axis:
 				steering_slider.value = event.axis_value*50
 				current_steering_value = event.axis_value*50
+		if event is InputEventJoypadButton:
+			if event.device == wheel_hid && event.button_index == reverse_button:
+				current_reverse_value = event.pressed
 				
-	# todo move inside wheel hid
-	if event is InputEventJoypadButton:
-		if event.device == wheel_hid && event.button_index == reverse_button:
-			current_reverse_value = true
 	if event is InputEventKey:
 		if event.keycode == reverse_button:
-			print(event)
 			current_reverse_value = event.pressed
-			if(event.pressed):
-				reverse_timeout_timestamp = Time.get_ticks_msec()
+		if event.keycode == throttle_button:
+			current_throttle_value = 50 if event.pressed else 0
+		if event.keycode == wheel_left_button:
+			current_steering_value = -50 if event.pressed else 0
+		if event.keycode == wheel_right_button:
+			current_steering_value = 50 if event.pressed else 0
 	
 	if pedals_hid != -1 && throttle_axis != -1:
 		if event is InputEventJoypadMotion:
+			print("pedal motion")
 			event = event as InputEventJoypadMotion
 			if event.device == pedals_hid && event.axis == throttle_axis:
 				throttle_slider.value = event.axis_value*100
@@ -75,8 +82,6 @@ func send_data():
 	var reverse_data = PackedByteArray()
 	reverse_data.resize(4)
 	reverse_data.encode_float(0, 1.0 if current_reverse_value else 0)
-	
-	print(throttle_data, reverse_data)
 	
 	udp_client.put_packet(steering_data+throttle_data+reverse_data)
 
@@ -110,3 +115,15 @@ func set_throttle_axis(axis):
 func set_reverse_button(button):
 	print("reverse button", button)
 	self.reverse_button = button
+	
+func set_left_button(button):
+	print("left button", button)
+	self.wheel_left_button = button
+	
+func set_right_button(button):
+	print("right button", button)
+	self.wheel_right_button = button
+	
+func set_throttle_button(button):
+	print("throttle button", button)
+	self.throttle_button = button

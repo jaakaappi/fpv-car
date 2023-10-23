@@ -40,11 +40,17 @@ def reset_servo_and_motor():
     servomotor.angle = 90
     motor.angle = 110
 
+def stop_car():
+    set_throttle(110)
+
 def cleanup_IO():
     pca.deinit()
 
 try:
     print("Waiting for connection")
+
+    reverse_init = False
+
     while True:
         try:
             data, addr = sock.recvfrom(16) # bytes
@@ -66,6 +72,10 @@ try:
             reverse = struct.unpack('<f', thrid_part)[0]
             print("reverse ", reverse)
             if math.isclose(reverse, 1):
+                if not reverse_init:
+                    stop_car()
+                    time.sleep(0.2)
+                    reverse_init = True
                 # forward --- 110 +++ backwards
                 # reversing starts from 130ish
                 reverse_throttle = 135 # static low speed reverse for now
@@ -80,6 +90,9 @@ try:
                 motor_throttle = (((throttle*-1) * 10) / 100) + 110
                 print(motor_throttle)
                 set_throttle(motor_throttle)
+
+                if reverse_init:
+                    reverse_init = False
 
         # check every 0.5s if we are receiving data, stop if not
         except socket.timeout:
