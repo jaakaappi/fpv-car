@@ -1,5 +1,9 @@
 # fpv-car
+Code for controlling a small car over WiFi. Has a low latency video stream and works with steering wheels, e.g. Simucube Tahko through UDP to on-board RasPi 4
 
+![motorkar](https://github.com/jaakaappi/fpv-car/assets/915233/37c28d61-cde6-4232-b537-b22b4965d208)
+
+## Notes mainly for myself
 - Install Raspbian **32bit** Lite on your raspi. uv4l does not support 64bit!
 - Install `uv4l` from https://www.linux-projects.org/2022/04/25/installation-instructions-of-uv4l-for-bullseye-raspberry-pi-os/
 - Install `tmux` or `screen` to have a split terminal
